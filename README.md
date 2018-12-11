@@ -1,5 +1,5 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.Rmd. Please edit that file! -->
 
 # comsldpsy
 
@@ -14,7 +14,7 @@ Germany*.
 
 <!-- Our pre-print is online here: -->
 
-<!-- > Visser, L., Kalmar, J., Görgen, R., Linkersdörfer, J., Rothe, J., Hasselhorn, M., & Schulte-Körne, G. (submitted). *Comorbidities between specific learning disorders and psychopathology: a study with elementary school children in Germany*. , Accessed 10 Dec 2018. Online at  -->
+<!-- > Visser, L., Kalmar, J., Görgen, R., Linkersdörfer, J., Rothe, J., Hasselhorn, M., & Schulte-Körne, G. (submitted). *Comorbidities between specific learning disorders and psychopathology: a study with elementary school children in Germany*. , Accessed 11 Dec 2018. Online at  -->
 
 ### How to cite
 
@@ -24,7 +24,7 @@ Please cite this compendium as:
 > Hasselhorn, M., & Schulte-Körne, G., (2018). *Compendium of R code and
 > data for ‘Comorbidities between specific learning disorders and
 > psychopathology: a study with elementary school children in Germany’*.
-> Accessed 10 Dec 2018. Online at <http://doi.org/10.17605/OSF.IO/9MXP2>
+> Accessed 11 Dec 2018. Online at <http://doi.org/10.17605/OSF.IO/9MXP2>
 
 ### Contents
 
@@ -77,8 +77,9 @@ the analysis:
     Docker image that contains all the software dependencies needed to
     run the code and also includes the compendium’s R package, ready to
     use. After [installing
-    Docker](https://docs.docker.com/install/#supported-platforms), one
-    can simply download the image and run the container using:
+    Docker](https://docs.docker.com/install/#supported-platforms) (needs
+    administrator privileges), one can simply download the image and run
+    the container using:
     
         docker run -p 8888:8888 idealabsffm/comsldpsy
     

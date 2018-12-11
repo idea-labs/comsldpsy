@@ -64,7 +64,7 @@ There are several ways to use the compendium's contents and reproduce the analys
       - reproduce the analysis results on the user's computer
     - For more details on how to use the package and its functions, see [here](https://idea-labs.github.io/`r pkgenv$pkg_name`/articles/`r pkgenv$pkg_name`.html).
 
-- **Reproduce the analysis locally inside a [Docker](https://www.docker.com/) container**. This allows to replicate the exact computational environment used by the authors. The compendium includes a Dockerfile that specifies how to build a Docker image that contains all the software dependencies needed to run the code and also includes the compendium's R package, ready to use. After [installing Docker](https://docs.docker.com/install/#supported-platforms), one can simply download the image and run the container using:
+- **Reproduce the analysis locally inside a [Docker](https://www.docker.com/) container**. This allows to replicate the exact computational environment used by the authors. The compendium includes a Dockerfile that specifies how to build a Docker image that contains all the software dependencies needed to run the code and also includes the compendium's R package, ready to use. After [installing Docker](https://docs.docker.com/install/#supported-platforms) (needs administrator privileges), one can simply download the image and run the container using:
 
     ```
     docker run -p 8888:8888 `r pkgenv$url_docker`
