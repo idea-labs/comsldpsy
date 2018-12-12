@@ -18,7 +18,7 @@ reference:
   - create_sld_vars
   - filter_data
 - title: "Inferential statistics"
-  desc: "Functions for doing inferential statiscal analysis"
+  desc: "Functions for doing inferential statistical analysis"
   contents:
   - fisher_test
   - adj_inv_sinh_ci_or
