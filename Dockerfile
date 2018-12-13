@@ -66,3 +66,5 @@ COPY . /comsldpsy
 # go into the repo directory
 RUN . /etc/environment \
     && R -e "devtools::install('/comsldpsy', dep=TRUE)"
+
+USER ${NB_USER}
