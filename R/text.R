@@ -64,12 +64,6 @@ add_text_descriptives <- function(data) {
     age_mean_grade4 - text$age_mean_y_grade4 * 12
   )
 
-  # language
-  c(not_reported, text$perc_dam) %<-% get_n_perc_filter(
-    data,
-    "anamn_24 == 'ja'"
-  )
-
   # observed SLDs
   c(text$n_iso_read, text$perc_iso_read) %<-% get_n_perc_filter(
     data,
@@ -83,6 +77,23 @@ add_text_descriptives <- function(data) {
     data,
     "dsm5_cutoff_35 == 'isolated arithmetic disorder'"
   )
+
+  text$n_sld_any <- get_n_perc_filter(
+    data,
+    "dsm5_cutoff_35_01 == 'indication of problems'"
+  )[[1]]
+  text$n_sld_read <- get_n_perc_filter(
+    data,
+    "dsm5_cutoff_35_read == 'indication of problems'"
+  )[[1]]
+  text$n_sld_spell <- get_n_perc_filter(
+    data,
+    "dsm5_cutoff_35_spell == 'indication of problems'"
+  )[[1]]
+  text$n_sld_math <- get_n_perc_filter(
+    data,
+    "dsm5_cutoff_35_math == 'indication of problems'"
+  )[[1]]
 
   # observed comorbidities between SLD & psychopath.
   text$perc_com_read_spell_des <- get_n_perc_filter(
@@ -307,6 +318,30 @@ report_fisher_or <- function(data, sld, psy){
     )
 }
 
+#' Range of odds ratios from Fisher's exact test for specific psychopathology
+#'
+#' Outputs a character string with the range of odds ratios for all
+#'   combinations of a specific psychopathology and the different SLDs
+#'
+#' @param data tbl. Data frame with results of Fisher's exact
+#'   test
+#' @param psy character. Psychopathology variable name
+#' @return character. String reporting odds ratio range,
+#'   e.g., "2.5–3.5"
+#'
+#' @export
+report_fisher_or_range <- function(data, psy){
+  data %>%
+    dplyr::filter(y == psy & x != "dsm5_cutoff_5_01") %>%
+    dplyr::mutate(fisher_test_or = as.numeric(fisher_test_or)) %$%
+    stringr::str_c(
+      "range ",
+      round(min(.$fisher_test_or), 2),
+      "–",
+      round(max(.$fisher_test_or), 2)
+    )
+}
+
 #' Results of Fisher's exact test for manuscript text
 #'
 #' Stores results of Fisher's exact test as list of
@@ -332,6 +367,7 @@ add_text_fisher <- function(data) {
   text$or_math_adhs <- report_fisher_or(
     data, "dsm5_cutoff_35_math", "adhs_z_cat"
   )
+  text$or_range_des <- report_fisher_or_range(data, "des_z_cat")
 
   text
 }
