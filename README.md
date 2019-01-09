@@ -6,7 +6,7 @@
 This repository contains a reproducible research compendium for our
 paper:
 
-> Visser, L., Kalmar, J., Görgen, R., Linkersdörfer, J., Rothe, J.,
+> Visser, L., Kalmar, J., Linkersdörfer, J., Görgen, R., Rothe, J.,
 > Hasselhorn, M., & Schulte-Körne, G. (submitted). *Comorbidities
 > between specific learning disorders and psychopathology: a study with
 > elementary school children in
@@ -14,17 +14,17 @@ Germany*.
 
 <!-- Our pre-print is online here: -->
 
-<!-- > Visser, L., Kalmar, J., Görgen, R., Linkersdörfer, J., Rothe, J., Hasselhorn, M., & Schulte-Körne, G. (submitted). *Comorbidities between specific learning disorders and psychopathology: a study with elementary school children in Germany*. , Accessed 11 Dec 2018. Online at  -->
+<!-- > Visser, L., Kalmar, J., Linkersdörfer, J., Görgen, R., Rothe, J., Hasselhorn, M., & Schulte-Körne, G. (submitted). *Comorbidities between specific learning disorders and psychopathology: a study with elementary school children in Germany*. , Accessed 08 Jan 2019. Online at  -->
 
 ### How to cite
 
 Please cite this compendium as:
 
-> Visser, L., Kalmar, J., Görgen, R., Linkersdörfer, J., Rothe, J.,
-> Hasselhorn, M., & Schulte-Körne, G., (2018). *Compendium of R code and
+> Visser, L., Kalmar, J., Linkersdörfer, J., Görgen, R., Rothe, J.,
+> Hasselhorn, M., & Schulte-Körne, G., (2019). *Compendium of R code and
 > data for ‘Comorbidities between specific learning disorders and
 > psychopathology: a study with elementary school children in Germany’*.
-> Accessed 11 Dec 2018. Online at <http://doi.org/10.17605/OSF.IO/9MXP2>
+> Accessed 08 Jan 2019. Online at <http://doi.org/10.17605/OSF.IO/9MXP2>
 
 ### Contents
 
