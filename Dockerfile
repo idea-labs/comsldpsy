@@ -50,21 +50,15 @@ CMD jupyter notebook --ip 0.0.0.0
 
 ## compendium-specific configuration
 
-USER root
-
 # install newer package versions
-RUN install2.r -e -r 'https://mran.microsoft.com/snapshot/2018-12-01' \
-    drake \
-    ggplot2 \
-    redcapAPI \
-    haven \
-    sjmisc
+RUN Rscript -e "devtools::install_version('drake', version = '6.1.0', repos = 'https://mran.microsoft.com/snapshot/2018-12-01')"
+RUN Rscript -e "devtools::install_version('ggplot2', version = '3.1.0', repos = 'https://mran.microsoft.com/snapshot/2018-12-01')"
+RUN Rscript -e "devtools::install_version('redcapAPI', version = '2.2', repos = 'https://mran.microsoft.com/snapshot/2018-12-01')"
+RUN Rscript -e "devtools::install_version('haven', version = '2.0.0', repos = 'https://mran.microsoft.com/snapshot/2018-12-01')"
+RUN Rscript -e "devtools::install_version('sjmisc', version = '2.7.6', repos = 'https://mran.microsoft.com/snapshot/2018-12-01')"
 
 # install research compendium
 COPY . /comsldpsy
-
-# go into the repo directory
 RUN . /etc/environment \
     && R -e "devtools::install('/comsldpsy', dep=TRUE)"
 
-USER ${NB_USER}
