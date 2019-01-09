@@ -8,7 +8,7 @@ pkgenv <- new.env(parent = emptyenv())
     system.file(package = pkgenv$pkg_name), pkgenv$source_dir, sep = "/"
   )
   pkgenv[["authors"]] <- paste0(
-    "Visser, L., Kalmar, J., Görgen, R., Linkersdörfer, J., Rothe, J., ",
+    "Visser, L., Kalmar, J., Linkersdörfer, J., Görgen, R., Rothe, J., ",
     "Hasselhorn, M., & Schulte-Körne, G."
   )
   pkgenv[["title"]] <- paste0(
