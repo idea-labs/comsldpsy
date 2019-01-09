@@ -183,17 +183,24 @@ add_table_2 <- function(data){
     flextable::flextable() %>%
     flextable::set_header_labels(
       dsm5_cutoff_35 = "SLD group",
-      freq = "freq. (%)",
+      freq = "freq. [%]",
       cft_mean = "CFT",
       wrt_mean = "WRT",
       wllp_mean = "WLLP-R",
       cody_mean = "CODY"
     ) %>%
     flextable::add_header(
-      cft_mean = "(IQ)",
-      wrt_mean = "(T-score)",
-      wllp_mean = "(T-score)",
-      cody_mean = "(T-score)",
+      cft_mean = "(intelligence)",
+      wrt_mean = "(spelling)",
+      wllp_mean = "(reading)",
+      cody_mean = "(arithmetic)",
+      top = FALSE
+    ) %>%
+    flextable::add_header(
+      cft_mean = "[IQ]",
+      wrt_mean = "[T-score]",
+      wllp_mean = "[T-score]",
+      cody_mean = "[T-score]",
       top = FALSE
     ) %>%
     flextable::add_header(
@@ -209,25 +216,33 @@ add_table_2 <- function(data){
     ) %>%
     flextable::merge_at(j = 3:4, i = 1, part = "header") %>%
     flextable::merge_at(j = 3:4, i = 2, part = "header") %>%
+    flextable::merge_at(j = 3:4, i = 3, part = "header") %>%
     flextable::merge_at(j = 5:6, i = 1, part = "header") %>%
     flextable::merge_at(j = 5:6, i = 2, part = "header") %>%
+    flextable::merge_at(j = 5:6, i = 3, part = "header") %>%
     flextable::merge_at(j = 7:8, i = 1, part = "header") %>%
     flextable::merge_at(j = 7:8, i = 2, part = "header") %>%
+    flextable::merge_at(j = 7:8, i = 3, part = "header") %>%
     flextable::merge_at(j = 9:10, i = 1, part = "header") %>%
     flextable::merge_at(j = 9:10, i = 2, part = "header") %>%
+    flextable::merge_at(j = 9:10, i = 3, part = "header") %>%
     flextable::padding(
       i = 1:2, j = 1:10, padding.bottom = 0, part = "header"
     ) %>%
     flextable::padding(
       i = 2:3, j = 1:10, padding.top = 0, part = "header"
     ) %>%
+    flextable::padding(
+      i = 3:4, j = 1:10, padding.top = 0, part = "header"
+    ) %>%
     theme_apa() %>%
     flextable::align(j = 2:10, align = "right", part = "all") %>%
     flextable::align(j = 3:10, align = "center", part = "header") %>%
     flextable::width(j = 1, width = 2) %>%
     flextable::width(j = 2, width = 1) %>%
-    flextable::width(j = 3, width = 0.5) %>%
-    flextable::width(j = 4:10, width = 0.4)
+    flextable::width(j = 3:4, width = 0.5) %>%
+    flextable::width(j = 5:8, width = 0.4) %>%
+    flextable::width(j = 9:10, width = 0.5)
 }
 
 # helper function for add_table_3
@@ -390,10 +405,10 @@ disorder_rows <- function(data, disorder_var, disorder_string){
 #' @export
 add_table_3 <- function(data){
   dplyr::bind_cols(
-    disorder_rows(data, sca_e_z_cat, "adhd"),
-    disorder_rows(data, des_z_cat, "anxiety"),
-    disorder_rows(data, adhs_z_cat, "conduct"),
-    disorder_rows(data, ssv_z_cat, "depression")
+    disorder_rows(data, adhs_z_cat, "adhd"),
+    disorder_rows(data, sca_e_z_cat, "anxiety"),
+    disorder_rows(data, ssv_z_cat, "conduct"),
+    disorder_rows(data, des_z_cat, "depression")
   ) %>%
     dplyr::select(-dplyr::matches("group[1-9]$")) %>%
     flextable::flextable() %>%
