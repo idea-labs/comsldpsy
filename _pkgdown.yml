@@ -59,6 +59,7 @@ reference:
   - count_filter_results
   - add_text_fisher
   - report_fisher_or
+  - report_fisher_or_range
   - add_text_trend
   - report_trend_sign
   - report_trend_or
