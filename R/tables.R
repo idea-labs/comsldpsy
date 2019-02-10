@@ -442,7 +442,7 @@ add_table_3 <- function(data){
       anxiety_yes = "anxiety",
       depression_yes = "depression",
       adhd_yes = "ADHD",
-      conduct_yes = "conduct problems"
+      conduct_yes = "conduct disorder"
     ) %>%
     flextable::merge_at(j = 2:3, i = 1, part = "header") %>%
     flextable::merge_at(j = 2:3, i = 2, part = "header") %>%
@@ -623,7 +623,7 @@ add_table_all <- function(manuscript, tab1, tab2, tab3, tab4){
     officer::body_end_section_landscape() %>%
 
     # table 4
-    body_add_caption_table(4, "Fisher’s exact test results for the difference in occurence of anxiety, depression, conduct disorder, and ADHD between children with and without SLD") %>%
+    body_add_caption_table(4, "Fisher’s exact test results for the difference in occurrence of anxiety, depression, conduct disorder, and ADHD between children with and without SLD") %>%
     flextable::body_add_flextable(tab4, align = "left") %>%
     body_add_footnote("* ", "significant after FDR correction")
 }

@@ -351,7 +351,7 @@ add_figure_all <- function(manuscript, fig1, fig2, fig3) {
     # figure 2
     officer::body_end_section_portrait() %>%
     officer::body_add_gg(fig2, height = 5.7, width = 9.1) %>%
-    body_add_caption_figure(2, "“UpSet” graphs visualizing the overlap between areas with psychopathology in children with no SLD, any SLD, reading disorder, spelling disorder, and arithmetic disorder. For each SLD group, the total number of children with the different psychopathologies (anxiety, depression, conduct disorder, and ADHD) is presented in the small horizontal graph on the left. In the graph on the right, the dots indicate the combinations of psychopathologies, and the bar above the respective dots indicates the number of children within this SLD-group affected by the respective psychopathologies.") %>%
+    body_add_caption_figure(2, "“UpSet” graphs visualizing the overlap between areas with psychopathology in children with no SLD, any SLD, reading disorder, spelling disorder, and arithmetic disorder. For each SLD group, the total number of children with the different psychopathologies (anxiety, depression, conduct disorder, and ADHD) is presented in the small horizontal graph on the left. In the graph on the right, the dots indicate the combinations of psychopathologies, and the bar above the respective dots indicates the number of children within this SLD-group affected by the respective psychopathologies. conduct dis. = conduct disorder.") %>%
     officer::body_end_section_landscape() %>%
 
     # figure 3
