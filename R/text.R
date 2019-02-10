@@ -506,6 +506,9 @@ add_text_posthoc <- function(data) {
   c(text$posthoc_12_sca, text$posthoc_23_sca) %<-% report_posthoc(
     data, "sca_e_z_cat"
   )
+  c(text$posthoc_12_ssv, text$posthoc_23_ssv) %<-% report_posthoc(
+    data, "ssv_z_cat"
+  )
 
   text
 }
