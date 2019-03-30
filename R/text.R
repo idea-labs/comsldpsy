@@ -17,7 +17,7 @@ get_mean_ci <- function(data, filter_cond) {
 
   stringr::str_c(
       "M = ", results[[1]],
-      " (95% CI = ", results[[2]], "–", results[[3]], ")"
+      " [95% CI = ", results[[2]], "–", results[[3]], "]"
     )
 }
 
@@ -62,6 +62,52 @@ add_text_descriptives <- function(data) {
   text$age_mean_y_grade4 <- floor(age_mean_grade4 / 12)
   text$age_mean_m_grade4 <- round(
     age_mean_grade4 - text$age_mean_y_grade4 * 12
+  )
+
+  # participant's characteristics
+  c(text$n_grade3, text$perc_grade3) %<-% get_n_perc_filter(
+    data,
+    "grade == '3. Klasse'"
+  )
+  c(text$n_grade4, text$perc_grade4) %<-% get_n_perc_filter(
+    data,
+    "grade == '4. Klasse'"
+  )
+  c(text$n_male, text$perc_male) %<-% get_n_perc_filter(
+    data,
+    "gender == 'male'"
+  )
+  c(text$n_female, text$perc_female) %<-% get_n_perc_filter(
+    data,
+    "gender == 'female'"
+  )
+  c(text$n_hesse, text$perc_hesse) %<-% get_n_perc_filter(
+    data,
+    "land == 'Hessen'"
+  )
+  c(text$n_bavaria, text$perc_bavaria) %<-% get_n_perc_filter(
+    data,
+    "land == 'Bayern'"
+  )
+  c(text$n_german, text$perc_german) %<-% get_n_perc_filter(
+    data,
+    "nationality == 'German'"
+  )
+  c(text$n_nongerman, text$perc_nongerman) %<-% get_n_perc_filter(
+    data,
+    "nationality == 'non-German'"
+  )
+  c(text$n_haupts, text$perc_haupts) %<-% get_n_perc_filter(
+    data,
+    "education_mother == 'kein/Hauptschulabschluss'"
+  )
+  c(text$n_reals, text$perc_reals) %<-% get_n_perc_filter(
+    data,
+    "education_mother == 'Mittlere Reife'"
+  )
+  c(text$n_abitur, text$perc_abitur) %<-% get_n_perc_filter(
+    data,
+    "education_mother == 'Abitur'"
   )
 
   # observed SLDs
@@ -521,7 +567,7 @@ add_text_posthoc <- function(data) {
 #' @param data tbl. Data frame with results of the poisson model
 #' @param the_term character. Model term
 #' @return character. Strings reporting parameter estimate, CI, and
-#'   p-value, e.g., "1.65 (95-CI = 1.55–1.75, p < .001)"
+#'   p-value, e.g., "1.65 (95%-CI = 1.55–1.75, p < .001)"
 #' @export
 report_poisson <- function(data, the_term){
   data %>%
@@ -540,7 +586,7 @@ report_poisson <- function(data, the_term){
       dplyr::vars(est, cil, ciu),
       dplyr::funs(round(., 2))
     ) %$%
-    stringr::str_c(.$est, " (95-CI = ", .$cil, "–", .$ciu, ", p", .$p, ")")
+    stringr::str_c(.$est, " (95%-CI = ", .$cil, "–", .$ciu, ", p", .$p, ")")
 }
 
 #' Results of the poisson model for manuscript text

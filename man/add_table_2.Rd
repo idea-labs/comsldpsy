@@ -13,6 +13,5 @@ add_table_2(data)
 \code{flextable} object. The table
 }
 \description{
-Numbers and percentages of children with different types of SLD
-and average test scores.
+Fisher’s exact test results.
 }

@@ -40,212 +40,10 @@ theme_apa <- function(ft) {
       border = officer::fp_border(width = 2),
       part = "all"
     ) %>%
-    flextable::font(fontname = "Times New Roman", part = "all") %>%
-    flextable::fontsize(size = 12, part = "all") %>%
     flextable::autofit()
 }
 
-#' Table 1
-#'
-#' Description and representativeness of the sample.
-#'
-#' @param data tbl. The filtered data frame
-#' @return `flextable` object. The table
-#' @export
-add_table_1 <- function(data){
-  c(n_grade3, perc_grade3) %<-% get_n_perc_filter(
-    data,
-    "grade == '3. Klasse'"
-  )
-  c(n_grade4, perc_grade4) %<-% get_n_perc_filter(
-    data,
-    "grade == '4. Klasse'"
-  )
-  c(n_male, perc_male) %<-% get_n_perc_filter(
-    data,
-    "gender == 'male'"
-  )
-  c(n_female, perc_female) %<-% get_n_perc_filter(
-    data,
-    "gender == 'female'"
-  )
-  c(n_hesse, perc_hesse) %<-% get_n_perc_filter(
-    data,
-    "land == 'Hessen'"
-  )
-  c(n_bavaria, perc_bavaria) %<-% get_n_perc_filter(
-    data,
-    "land == 'Bayern'"
-  )
-  c(n_german, perc_german) %<-% get_n_perc_filter(
-    data,
-    "nationality == 'German'"
-  )
-  c(n_nongerman, perc_nongerman) %<-% get_n_perc_filter(
-    data,
-    "nationality == 'non-German'"
-  )
-  c(n_haupts, perc_haupts) %<-% get_n_perc_filter(
-    data,
-    "education_mother == 'kein/Hauptschulabschluss'"
-  )
-  c(n_reals, perc_reals) %<-% get_n_perc_filter(
-    data,
-    "education_mother == 'Mittlere Reife'"
-  )
-  c(n_abitur, perc_abitur) %<-% get_n_perc_filter(
-    data,
-    "education_mother == 'Abitur'"
-  )
-
-  tibble::tribble(
-    ~A, ~B, ~C, ~D, ~E,
-    "gender", "", "", "", "",
-    "male", "", stringr::str_c(n_male, " (", perc_male, "%)"), "", "",
-    "female", "", stringr::str_c(n_female, " (", perc_female, "%)"), "", "",
-    "grade", "", "", "", "",
-    "3", "rd", stringr::str_c(n_grade3, " (", perc_grade3, "%)"), "", "",
-    "4", "th", stringr::str_c(n_grade4, " (", perc_grade4, "%)"), "", "",
-    "state", "", "", "", "",
-    "Hesse", "", stringr::str_c(n_hesse, " (", perc_hesse, "%)"), "", "",
-    "Bavaria", "", stringr::str_c(n_bavaria, " (", perc_bavaria, "%)"), "", "",
-    "mothers' education", "", "", "", "",
-    "no degree/Hauptschule", "1",
-      stringr::str_c(n_haupts, " (", perc_haupts, "%)"),
-      "23.5", "Federal Office of Statistics, 2016",
-    "Realschule", "2", stringr::str_c(n_reals, " (", perc_reals, "%)"),
-      "34.3", "",
-    "Gymnasium", "3", stringr::str_c(n_abitur, " (", perc_abitur, "%)"),
-      "42.9", "",
-    "nationality", "", "", "", "",
-    "German", "", stringr::str_c(n_german, " (", perc_german, "%)"),
-      "89.5", "Federal Office of Statistics, 2017a (p. 41), 2017b (p. 62)",
-    "non-German", "", stringr::str_c(n_nongerman, " (", perc_nongerman, "%)"),
-      "10.5", ""
-  ) %>%
-    flextable::flextable(col_keys = c("dummy_col", "C", "D", "E")) %>%
-    flextable::display(
-      col_key = "dummy_col",
-      pattern = "{{variable_}}{{superscript_}}",
-      formatters = list(variable_ ~ A, superscript_ ~ B),
-      fprops = list(superscript_ = update(get_font()$superscript, italic = TRUE))
-    ) %>%
-    flextable::set_header_labels(
-      dummy_col = "variable",
-      C = "N (%) present study",
-      D = "% reference value (if applicable)",
-      E = "source"
-    ) %>%
-    theme_apa() %>%
-    flextable::padding(
-      i = c(2:3, 5:6, 8:9, 11:13, 15:16), j = 1, padding.left = 10
-    ) %>%
-    flextable::italic(i = c(2:3, 5:6, 8:9, 11:13, 15:16), j = 1) %>%
-    flextable::merge_at(i = 11:13, j = 4) %>%
-    flextable::merge_at(i = 15:16, j = 4) %>%
-    flextable::width(j = 3, width = 1.3) %>%
-    flextable::width(j = 4, width = 1.9)
-}
-
-#' Table 2
-#'
-#' Numbers and percentages of children with different types of SLD
-#'   and average test scores.
-#'
-#' @inherit add_table_1
-#' @export
-add_table_2 <- function(data){
-  data %>%
-    dplyr::filter(!is.na(dsm5_cutoff_35)) %>%
-    dplyr::group_by(dsm5_cutoff_35) %>%
-    dplyr::summarize(
-      freq = n(),
-      perc = round(freq / nrow(data) * 100, 1),
-      cft_mean = mean(cft_iq_own_kl),
-      cft_sd = sd(cft_iq_own_kl),
-      wrt_mean = mean(wrt_t_own),
-      wrt_sd = sd(wrt_t_own),
-      wllp_mean = mean(wllp_t_own),
-      wllp_sd = sd(wllp_t_own),
-      cody_mean = mean(cody_t_own),
-      cody_sd = sd(cody_t_own)
-    ) %>%
-    # round all double to 1 decimal point
-    dplyr::mutate_if(
-      is.double,
-      dplyr::funs(as.character(round(., 1)))
-    ) %>%
-    # combine freq and perc column
-    dplyr::mutate(
-      freq = stringr::str_c(as.character(freq), " (", perc, "%)")
-    ) %>%
-    dplyr::select(-perc) %>%
-    flextable::flextable() %>%
-    flextable::set_header_labels(
-      dsm5_cutoff_35 = "SLD group",
-      freq = "freq. [%]",
-      cft_mean = "CFT",
-      wrt_mean = "WRT",
-      wllp_mean = "WLLP-R",
-      cody_mean = "CODY"
-    ) %>%
-    flextable::add_header(
-      cft_mean = "(intelligence)",
-      wrt_mean = "(spelling)",
-      wllp_mean = "(reading)",
-      cody_mean = "(arithmetic)",
-      top = FALSE
-    ) %>%
-    flextable::add_header(
-      cft_mean = "[IQ]",
-      wrt_mean = "[T-score]",
-      wllp_mean = "[T-score]",
-      cody_mean = "[T-score]",
-      top = FALSE
-    ) %>%
-    flextable::add_header(
-      cft_mean = "M",
-      cft_sd = "SD",
-      wrt_mean = "M",
-      wrt_sd = "SD",
-      wllp_mean = "M",
-      wllp_sd = "SD",
-      cody_mean = "M",
-      cody_sd = "SD",
-      top = FALSE
-    ) %>%
-    flextable::merge_at(j = 3:4, i = 1, part = "header") %>%
-    flextable::merge_at(j = 3:4, i = 2, part = "header") %>%
-    flextable::merge_at(j = 3:4, i = 3, part = "header") %>%
-    flextable::merge_at(j = 5:6, i = 1, part = "header") %>%
-    flextable::merge_at(j = 5:6, i = 2, part = "header") %>%
-    flextable::merge_at(j = 5:6, i = 3, part = "header") %>%
-    flextable::merge_at(j = 7:8, i = 1, part = "header") %>%
-    flextable::merge_at(j = 7:8, i = 2, part = "header") %>%
-    flextable::merge_at(j = 7:8, i = 3, part = "header") %>%
-    flextable::merge_at(j = 9:10, i = 1, part = "header") %>%
-    flextable::merge_at(j = 9:10, i = 2, part = "header") %>%
-    flextable::merge_at(j = 9:10, i = 3, part = "header") %>%
-    flextable::padding(
-      i = 1:2, j = 1:10, padding.bottom = 0, part = "header"
-    ) %>%
-    flextable::padding(
-      i = 2:3, j = 1:10, padding.top = 0, part = "header"
-    ) %>%
-    flextable::padding(
-      i = 3:4, j = 1:10, padding.top = 0, part = "header"
-    ) %>%
-    theme_apa() %>%
-    flextable::align(j = 2:10, align = "right", part = "all") %>%
-    flextable::align(j = 3:10, align = "center", part = "header") %>%
-    flextable::width(j = 1, width = 2) %>%
-    flextable::width(j = 2, width = 1) %>%
-    flextable::width(j = 3:4, width = 0.5) %>%
-    flextable::width(j = 5:8, width = 0.4) %>%
-    flextable::width(j = 9:10, width = 0.5)
-}
-
-# helper function for add_table_3
+# helper function for add_table_1
 sld_summary_onevar <- function(data, var, group_var) {
   var <- rlang::enquo(var)
   group_var <- rlang::enquo(group_var)
@@ -280,7 +78,7 @@ sld_summary_onevar <- function(data, var, group_var) {
     dplyr::select(-rowname)
 }
 
-# helper function for add_table_3
+# helper function for add_table_1
 disorder_rows <- function(data, disorder_var, disorder_string){
   disorder_var <- rlang::enquo(disorder_var)
 
@@ -396,24 +194,71 @@ disorder_rows <- function(data, disorder_var, disorder_string){
     stats::setNames(row_names)
 }
 
-#' Table 3
+#' Table 1
 #'
-#' Numbers and percentages of children with psychopathology for
-#'   different types of SLD.
+#' Numbers and Percentages of Children with Anxiety, Depression, Conduct
+#'   Disorder, and ADHD in Children with Different Types of SLD
 #'
-#' @inherit add_table_1
+#' @param data tbl. The filtered data frame
+#' @return `flextable` object. The table
 #' @export
-add_table_3 <- function(data){
+add_table_1 <- function(data){
+  freq_1 <- data %>%
+    dplyr::filter(!is.na(dsm5_cutoff_35)) %>%
+    dplyr::group_by(dsm5_cutoff_35) %>%
+    dplyr::summarize(
+      freq = n(),
+      perc = round(freq / nrow(data) * 100, 1)
+    ) %>%
+    dplyr::mutate_if(
+      is.double,
+      dplyr::funs(as.character(round(., 1)))
+    ) %>%
+    dplyr::mutate(
+      freq = stringr::str_c(as.character(freq), " (", perc, "%)"),
+      dsm5_cutoff_35 = as.character(dsm5_cutoff_35)
+    ) %>%
+    dplyr::select(-perc) %>%
+    dplyr::rename(group = dsm5_cutoff_35)
+
+  freq_2 <- data %>%
+    dplyr::filter(!is.na(dsm5_cutoff_35_01)) %>%
+    dplyr::group_by(dsm5_cutoff_35_01) %>%
+    dplyr::summarize(
+      freq = n(),
+      perc = round(freq / nrow(data) * 100, 1)
+    ) %>%
+    dplyr::mutate_if(
+      is.double,
+      dplyr::funs(as.character(round(., 1)))
+    ) %>%
+    dplyr::mutate(
+      freq = stringr::str_c(as.character(freq), " (", perc, "%)")
+    ) %>%
+    dplyr::select(-perc) %>%
+    dplyr::rename(group = dsm5_cutoff_35_01) %>%
+    dplyr::slice(2) %>%
+    dplyr::mutate(
+      group = "Total SLD (any disorder)"
+    )
+
+  freq <- dplyr::bind_rows(
+    freq_1,
+    freq_2
+  )
+
   dplyr::bind_cols(
     disorder_rows(data, adhs_z_cat, "adhd"),
     disorder_rows(data, sca_e_z_cat, "anxiety"),
     disorder_rows(data, ssv_z_cat, "conduct"),
     disorder_rows(data, des_z_cat, "depression")
   ) %>%
+    dplyr::full_join(freq, ., by = "group") %>%
     dplyr::select(-dplyr::matches("group[1-9]$")) %>%
     flextable::flextable() %>%
     flextable::set_header_labels(
       group = "",
+      freq = "",
       anxiety_yes = "yes",
       anxiety_no = "no",
       depression_yes = "yes",
@@ -425,6 +270,7 @@ add_table_3 <- function(data){
     ) %>%
     flextable::add_header(
       group = "",
+      freq = "",
       anxiety_yes = "[%]",
       depression_yes = "[%]",
       adhd_yes = "[%]",
@@ -432,6 +278,7 @@ add_table_3 <- function(data){
     ) %>%
     flextable::add_header(
       group = "",
+      freq = "",
       anxiety_yes = "freq. (male/female)",
       depression_yes = "freq. (male/female)",
       adhd_yes = "freq. (male/female)",
@@ -439,43 +286,45 @@ add_table_3 <- function(data){
     ) %>%
     flextable::add_header(
       group = "SLD group",
+      freq = "freq. (%)",
       anxiety_yes = "anxiety",
       depression_yes = "depression",
       adhd_yes = "ADHD",
       conduct_yes = "conduct disorder"
     ) %>%
-    flextable::merge_at(j = 2:3, i = 1, part = "header") %>%
-    flextable::merge_at(j = 2:3, i = 2, part = "header") %>%
-    flextable::merge_at(j = 2:3, i = 3, part = "header") %>%
-    flextable::merge_at(j = 4:5, i = 1, part = "header") %>%
-    flextable::merge_at(j = 4:5, i = 2, part = "header") %>%
-    flextable::merge_at(j = 4:5, i = 3, part = "header") %>%
-    flextable::merge_at(j = 6:7, i = 1, part = "header") %>%
-    flextable::merge_at(j = 6:7, i = 2, part = "header") %>%
-    flextable::merge_at(j = 6:7, i = 3, part = "header") %>%
-    flextable::merge_at(j = 8:9, i = 1, part = "header") %>%
-    flextable::merge_at(j = 8:9, i = 2, part = "header") %>%
-    flextable::merge_at(j = 8:9, i = 3, part = "header") %>%
-    flextable::merge_v(j = 1, part = "body") %>%
+    flextable::merge_at(j = 3:4, i = 1, part = "header") %>%
+    flextable::merge_at(j = 3:4, i = 2, part = "header") %>%
+    flextable::merge_at(j = 3:4, i = 3, part = "header") %>%
+    flextable::merge_at(j = 5:6, i = 1, part = "header") %>%
+    flextable::merge_at(j = 5:6, i = 2, part = "header") %>%
+    flextable::merge_at(j = 5:6, i = 3, part = "header") %>%
+    flextable::merge_at(j = 7:8, i = 1, part = "header") %>%
+    flextable::merge_at(j = 7:8, i = 2, part = "header") %>%
+    flextable::merge_at(j = 7:8, i = 3, part = "header") %>%
+    flextable::merge_at(j = 9:10, i = 1, part = "header") %>%
+    flextable::merge_at(j = 9:10, i = 2, part = "header") %>%
+    flextable::merge_at(j = 9:10, i = 3, part = "header") %>%
+    flextable::merge_v(j = 1:2, part = "body") %>%
     theme_apa() %>%
-    flextable::align(j = 2:9, align = "right", part = "all") %>%
-    flextable::align(j = 2:9, align = "center", part = "header") %>%
+    flextable::align(j = 3:10, align = "right", part = "all") %>%
+    flextable::align(j = 3:10, align = "center", part = "header") %>%
     flextable::padding(
-      i = 1:3, j = 1:9, padding.bottom = 0, part = "header"
+      i = 1:3, j = 1:10, padding.bottom = 0, part = "header"
     ) %>%
-    flextable::padding(i = 16, j = 1:9, padding.bottom = 20) %>%
+    flextable::padding(i = 16, j = 1:10, padding.bottom = 20) %>%
     flextable::width(j = 1, width = 1.4) %>%
-    flextable::width(j = c(3, 5, 7, 9), width = 1.2) %>%
-    flextable::width(j = c(2, 4, 6, 8), width = 1.1)
+    flextable::width(j = 3, width = 0.8) %>%
+    flextable::width(j = c(4, 6, 8, 10), width = 0.9) %>%
+    flextable::width(j = c(5, 7, 9), width = 0.9)
 }
 
-#' Table 4
+#' Table 2
 #'
 #' Fisher’s exact test results.
 #'
 #' @inherit add_table_1
 #' @export
-add_table_4 <- function(data){
+add_table_2 <- function(data){
   data %>%
     dplyr::select(
       x, y, fisher_test_p, fisher_test_p_fdr,
@@ -541,6 +390,94 @@ add_table_4 <- function(data){
     flextable::align(j = 3:4, align = "right", part = "all")
 }
 
+#' Supplemental Table
+#'
+#' Average Test Scores for the Different SLD Groups
+#'
+#' @inherit add_table_1
+#' @export
+add_table_sup <- function(data){
+  data %>%
+    dplyr::filter(!is.na(dsm5_cutoff_35)) %>%
+    dplyr::group_by(dsm5_cutoff_35) %>%
+    dplyr::summarize(
+      cft_mean = mean(cft_iq_own_kl),
+      cft_sd = sd(cft_iq_own_kl),
+      wrt_mean = mean(wrt_t_own),
+      wrt_sd = sd(wrt_t_own),
+      wllp_mean = mean(wllp_t_own),
+      wllp_sd = sd(wllp_t_own),
+      cody_mean = mean(cody_t_own),
+      cody_sd = sd(cody_t_own)
+    ) %>%
+    # round all double to 1 decimal point
+    dplyr::mutate_if(
+      is.double,
+      dplyr::funs(as.character(round(., 1)))
+    ) %>%
+    flextable::flextable() %>%
+    flextable::set_header_labels(
+      dsm5_cutoff_35 = "SLD group",
+      cft_mean = "CFT",
+      wrt_mean = "WRT",
+      wllp_mean = "WLLP-R",
+      cody_mean = "CODY"
+    ) %>%
+    flextable::add_header(
+      cft_mean = "(intelligence)",
+      wrt_mean = "(spelling)",
+      wllp_mean = "(reading)",
+      cody_mean = "(arithmetic)",
+      top = FALSE
+    ) %>%
+    flextable::add_header(
+      cft_mean = "[IQ]",
+      wrt_mean = "[T-score]",
+      wllp_mean = "[T-score]",
+      cody_mean = "[T-score]",
+      top = FALSE
+    ) %>%
+    flextable::add_header(
+      cft_mean = "M",
+      cft_sd = "SD",
+      wrt_mean = "M",
+      wrt_sd = "SD",
+      wllp_mean = "M",
+      wllp_sd = "SD",
+      cody_mean = "M",
+      cody_sd = "SD",
+      top = FALSE
+    ) %>%
+    flextable::merge_at(j = 2:3, i = 1, part = "header") %>%
+    flextable::merge_at(j = 2:3, i = 2, part = "header") %>%
+    flextable::merge_at(j = 2:3, i = 3, part = "header") %>%
+    flextable::merge_at(j = 4:5, i = 1, part = "header") %>%
+    flextable::merge_at(j = 4:5, i = 2, part = "header") %>%
+    flextable::merge_at(j = 4:5, i = 3, part = "header") %>%
+    flextable::merge_at(j = 6:7, i = 1, part = "header") %>%
+    flextable::merge_at(j = 6:7, i = 2, part = "header") %>%
+    flextable::merge_at(j = 6:7, i = 3, part = "header") %>%
+    flextable::merge_at(j = 8:9, i = 1, part = "header") %>%
+    flextable::merge_at(j = 8:9, i = 2, part = "header") %>%
+    flextable::merge_at(j = 8:9, i = 3, part = "header") %>%
+    flextable::padding(
+      i = 1:2, j = 1:9, padding.bottom = 0, part = "header"
+    ) %>%
+    flextable::padding(
+      i = 2:3, j = 1:9, padding.top = 0, part = "header"
+    ) %>%
+    flextable::padding(
+      i = 3:4, j = 1:9, padding.top = 0, part = "header"
+    ) %>%
+    theme_apa() %>%
+    flextable::align(j = 2:9, align = "right", part = "all") %>%
+    flextable::align(j = 2:9, align = "center", part = "header") %>%
+    flextable::width(j = 1, width = 2) %>%
+    flextable::width(j = 2:3, width = 0.5) %>%
+    flextable::width(j = 4:7, width = 0.4) %>%
+    flextable::width(j = 8:9, width = 0.5)
+}
+
 #' Table footnote
 #'
 #' Adds a table footnote to the manuscript.
@@ -548,13 +485,14 @@ add_table_4 <- function(data){
 #' @param manuscript `officer` rdocx object. The manuscript
 #' @param number character. Number/symbol of the footnote
 #' @param text character. Text of the footnote
+#' @param superscript character. Format number/symbol of the footnote
 #' @return `officer` rdocx object. The manuscript with added content
 #' @export
-body_add_footnote <- function(manuscript, number, text) {
+body_add_footnote <- function(manuscript, number, text, format) {
   officer::body_add_fpar(
     manuscript,
     officer::fpar(
-      officer::ftext(number, prop = get_font()$superscript),
+      officer::ftext(number, prop = get_font()[[format]]),
       officer::ftext(text, prop = get_font()$normal)
     )
   )
@@ -588,42 +526,45 @@ body_add_caption_table <- function(manuscript, number, text) {
     officer::body_add_par("")
 }
 
-#' Add tables
+#' Add tables to manuscript
 #'
 #' Add all tables and table captions to the manuscript.
 #'
 #' @param manuscript `officer` rdocx object. The manuscript
 #' @param tab1 `flextable` object. Table 1
 #' @param tab2 `flextable` object. Table 2
-#' @param tab3 `flextable` object. Table 3
-#' @param tab4 `flextable` object. Table 4
 #' @return `officer` rdocx object. The manuscript with added content
 #' @export
-add_table_all <- function(manuscript, tab1, tab2, tab3, tab4){
+add_table_manuscr <- function(manuscript, tab1, tab2){
   manuscript %>%
 
     # table 1
     officer::body_add_break() %>%
-    body_add_caption_table(1, "Description and representativeness of the sample") %>%
-    flextable::body_add_flextable(tab1, align = "left") %>%
-    body_add_footnote("1 ", "Hauptschule, five years of school after four years of elementary school.") %>%
-    body_add_footnote("2 ", "Realschule, six years of school after four years of elementary school, terminating with a secondary-school level-I certificate.") %>%
-    body_add_footnote("3 ", "Gymnasium, eight years of school after four years of elementary school, terminating with a general qualification for university entrance.") %>%
-
-    # table 2
-    officer::body_add_break() %>%
-    body_add_caption_table(2, "Numbers and percentages of children with different types of SLD and their average test scores") %>%
-    flextable::body_add_flextable(tab2, align = "left") %>%
-
-    # table 3
-    officer::body_add_break() %>%
     officer::body_end_section_portrait() %>%
-    body_add_caption_table(3, "Numbers and percentages of children with anxiety, depression, conduct disorder, and ADHD in children with different types of SLD") %>%
-    flextable::body_add_flextable(tab3, align = "left") %>%
+    body_add_caption_table(1, "Numbers and Percentages of Children with Anxiety, Depression, Conduct Disorder, and ADHD in Children with Different Types of SLD") %>%
+    flextable::body_add_flextable(tab1, align = "left") %>%
     officer::body_end_section_landscape() %>%
 
-    # table 4
-    body_add_caption_table(4, "Fisher’s exact test results for the difference in occurrence of anxiety, depression, conduct disorder, and ADHD between children with and without SLD") %>%
-    flextable::body_add_flextable(tab4, align = "left") %>%
-    body_add_footnote("* ", "significant after FDR correction")
+    # table 2
+    body_add_caption_table(2, "Fisher’s Exact Test Results for the Difference in Occurrence of Anxiety, Depression, Conduct Disorder, and ADHD between Children with and without SLD") %>%
+    flextable::body_add_flextable(tab2, align = "left") %>%
+    body_add_footnote("* ", "significant after FDR correction", "superscript")
+}
+
+#' Add table to supplemental
+#'
+#' Add the table and table caption to the supplemental.
+#'
+#' @param supplemental `officer` rdocx object. The manuscript
+#' @param tab_suppl `flextable` object. Supplemental table
+#' @param text list. List of descriptive statistics strings
+#' @return `officer` rdocx object. The supplemental with added content
+#' @export
+add_table_suppl <- function(supplemental, tab_suppl, text){
+  supplemental %>%
+    officer::body_add_break() %>%
+    body_add_caption_table("", "Average Test Scores for the Different SLD Groups") %>%
+    flextable::body_add_flextable(tab_suppl, align = "left") %>%
+    body_add_footnote("Note.", stringr::str_c("The average intelligence quotients as well as reading, spelling, and arithmetic T-scores. The average IQ is lower for children with an isolated arithmetic disorder compared to an isolated reading or spelling disorder (", text$iq_math, " vs. ", text$iq_read, " respectively ", text$iq_math, " vs. ", text$iq_spell, "). This could be related to the fact that children with dyscalculia are known to have difficulties in visual-spatial processing (Mähler & Schuchardt, 2012) and executive functions (especially inhibition of information; Deutsche Gesellschaft für Kinder- und Jugendpsychiatrie, Psychosomatik und Psychotherapie, 2018). The nonverbal intelligence test used, in significant part, draws upon these skills, which might have adversely affected the performance of children with dyscalculia."), "italic")
+
 }

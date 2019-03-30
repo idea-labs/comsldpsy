@@ -13,5 +13,6 @@ add_table_1(data)
 \code{flextable} object. The table
 }
 \description{
-Description and representativeness of the sample.
+Numbers and Percentages of Children with Anxiety, Depression, Conduct
+Disorder, and ADHD in Children with Different Types of SLD
 }

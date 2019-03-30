@@ -32,9 +32,9 @@ reference:
   contents:
   - add_table_1
   - add_table_2
-  - add_table_3
-  - add_table_4
-  - add_table_all
+  - add_table_sup
+  - add_table_manuscr
+  - add_table_suppl
   - body_add_caption_table
   - body_add_footnote
 - title: "Figures"

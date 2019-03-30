@@ -13,7 +13,7 @@ report_poisson(data, the_term)
 }
 \value{
 character. Strings reporting parameter estimate, CI, and
-p-value, e.g., "1.65 (95-CI = 1.55–1.75, p < .001)"
+p-value, e.g., "1.65 (95%-CI = 1.55–1.75, p < .001)"
 }
 \description{
 Outputs a character string with the estimate, CI, and p-value

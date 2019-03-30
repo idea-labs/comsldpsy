@@ -111,27 +111,39 @@ get_plan <- function(){
       text_posthoc,
       text_poisson
     ),
+
     manuscript_in = officer::read_docx(
       file_in("analysis/templates/manuscript_template.docx")
     ),
-    manuscript_text = add_text(manuscript_in, text_combined)
+    manuscript_text = add_text(manuscript_in, text_combined),
+
+    supplemental_in = officer::read_docx(
+      file_in("analysis/templates/supplemental_template.docx")
+    ),
+    supplemental_text = add_text(supplemental_in, text_exclusion)
   )
 
 
   #   __________________________________________________________________________
-  #   add tables to manuscript                                              ####
+  #   add tables to manuscript & supplemental                               ####
 
   plan_add_tables <- drake::drake_plan(
     table_1 = add_table_1(data_filtered),
-    table_2 = add_table_2(data_filtered),
-    table_3 = add_table_3(data_filtered),
-    table_4 = add_table_4(df_fisher_fdr),
-    manuscript_tables = add_table_all(
+    table_2 = add_table_2(df_fisher_fdr),
+    table_suppl = add_table_sup(data_filtered),
+    manuscript_tables = add_table_manuscr(
       manuscript_text,
       table_1,
-      table_2,
-      table_3,
-      table_4
+      table_2
+    ),
+    supplemental_tables = add_table_suppl(
+      supplemental_text,
+      table_suppl,
+      text_descriptives
+    ),
+    supplemental_out = print(
+      supplemental_tables,
+      target = file_out("analysis/manuscript/supplemental.docx")
     )
   )
 

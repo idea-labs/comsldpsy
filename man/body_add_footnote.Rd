@@ -4,7 +4,7 @@
 \alias{body_add_footnote}
 \title{Table footnote}
 \usage{
-body_add_footnote(manuscript, number, text)
+body_add_footnote(manuscript, number, text, format)
 }
 \arguments{
 \item{manuscript}{\code{officer} rdocx object. The manuscript}
@@ -12,6 +12,8 @@ body_add_footnote(manuscript, number, text)
 \item{number}{character. Number/symbol of the footnote}
 
 \item{text}{character. Text of the footnote}
+
+\item{superscript}{character. Format number/symbol of the footnote}
 }
 \value{
 \code{officer} rdocx object. The manuscript with added content
