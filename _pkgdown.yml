@@ -48,6 +48,7 @@ reference:
   - add_figure_3
   - add_figure_all
   - body_add_caption_figure
+  - export_tiff_figure
 - title: "Manuscript text"
   desc: "Functions for adding analyis results to the manuscript"
   contents:

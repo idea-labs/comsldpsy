@@ -161,11 +161,16 @@ plot_figure_2 <- function(data,
       `conduct dis.` = ssv_z_cat
     ) %>%
     dplyr::mutate_all(
-      dplyr::funs(redcapAPI::redcapFactorFlip(.))
+      dplyr::funs(
+        dplyr::case_when(
+          . == "no problems" ~ 0,
+          . == "indication of problems" ~ 1
+        )
+      )
     ) %>%
-    dplyr::mutate_all(
-      dplyr::funs(sjlabelled::remove_all_labels(.))
-    ) %>%
+    # dplyr::mutate_all(
+    #   dplyr::funs(sjlabelled::remove_all_labels(.))
+    # ) %>%
     UpSetR::upset(
       nintersects = NA,
       sets = c("depression", "conduct dis.", "anxiety", "ADHD"),
@@ -319,7 +324,6 @@ add_figure_3 <- function(data) {
 #' @export
 body_add_caption_figure <- function(manuscript, number, text) {
   manuscript %>%
-    officer::body_add_par("") %>%
     officer::body_add_fpar(
       officer::fpar(
         officer::ftext(
@@ -333,28 +337,40 @@ body_add_caption_figure <- function(manuscript, number, text) {
 
 #' Add figures
 #'
-#' Add all figures and figure captions to the manuscript.
+#' Add all figure captions to the manuscript.
 #'
 #' @param manuscript `officer` rdocx object. The manuscript
-#' @param fig1 plot object. Figure 1
-#' @param fig2 plot object. Figure 2
-#' @param fig3 plot object. Figure 3
 #' @return `officer` rdocx object. The manuscript with added content
 #' @export
-add_figure_all <- function(manuscript, fig1, fig2, fig3) {
+add_figure_all <- function(manuscript) {
   manuscript %>%
+    officer::body_add_break() %>%
 
     # figure 1
-    officer::body_add_gg(fig1) %>%
     body_add_caption_figure(1, "Number of areas affected by psychopathology in children with and without different subtypes of SLD.") %>%
 
     # figure 2
-    officer::body_end_section_portrait() %>%
-    officer::body_add_gg(fig2, height = 5.7, width = 9.1) %>%
+    officer::body_add_par("") %>%
     body_add_caption_figure(2, "“UpSet” graphs visualizing the overlap between areas with psychopathology in children with no SLD, any SLD, reading disorder, spelling disorder, and arithmetic disorder. For each SLD group, the total number of children with the different psychopathologies (anxiety, depression, conduct disorder, and ADHD) is presented in the small horizontal graph on the left. In the graph on the right, the dots indicate the combinations of psychopathologies, and the bar above the respective dots indicates the number of children within this SLD-group affected by the respective psychopathologies. conduct dis. = conduct disorder.") %>%
-    officer::body_end_section_landscape() %>%
 
     # figure 3
-    officer::body_add_gg(fig3) %>%
+    officer::body_add_par("") %>%
     body_add_caption_figure(3, "Trend in the prevalence of psychopathologies over the groups of children without an SLD, with an isolated SLD, and with comorbid SLDs.")
+}
+
+#' Export `.tiff`` figure
+#'
+#' Export figure as `.tiff` file with appropriate size and resolution as
+#' required by the journal
+#'
+#' @param the_plot plot object. The plot to save
+#' @param name character. The file name to save the plot under
+#' @param width numeric. Width in cm
+#' @param height numeric. Height in cm
+#' @param dpi numeric. Resolution in DPI
+#' @export
+export_tiff_figure <- function(the_plot, name, width, height, dpi=300){
+  tiff(name, units="mm", width=width, height=height, res=dpi)
+  print(the_plot)
+  dev.off()
 }

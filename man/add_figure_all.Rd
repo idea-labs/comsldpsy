@@ -4,20 +4,14 @@
 \alias{add_figure_all}
 \title{Add figures}
 \usage{
-add_figure_all(manuscript, fig1, fig2, fig3)
+add_figure_all(manuscript)
 }
 \arguments{
 \item{manuscript}{\code{officer} rdocx object. The manuscript}
-
-\item{fig1}{plot object. Figure 1}
-
-\item{fig2}{plot object. Figure 2}
-
-\item{fig3}{plot object. Figure 3}
 }
 \value{
 \code{officer} rdocx object. The manuscript with added content
 }
 \description{
-Add all figures and figure captions to the manuscript.
+Add all figure captions to the manuscript.
 }

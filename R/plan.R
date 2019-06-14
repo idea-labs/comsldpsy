@@ -11,7 +11,7 @@ get_plan <- function(){
   #   prepare data for analysis                                             ####
 
   plan_preparation <- drake::drake_plan(
-    data_raw = readRDS(file_in("analysis/data/data_orig.rds")),
+    data_raw = readRDS(drake::file_in("analysis/data/data_orig.rds")),
     data_transformed = transform_data(data_raw),
     data_filtered = filter_data(data_transformed, get_filter_cond())
   )
@@ -120,7 +120,7 @@ get_plan <- function(){
     supplemental_in = officer::read_docx(
       file_in("analysis/templates/supplemental_template.docx")
     ),
-    supplemental_text = add_text(supplemental_in, text_exclusion)
+    supplemental_text = add_text(supplemental_in, text_combined)
   )
 
 
@@ -148,21 +148,25 @@ get_plan <- function(){
   )
 
   #   __________________________________________________________________________
-  #   add figures to manuscript                                             ####
+  #   export figures and add figure captions to manuscript                  ####
 
   plan_add_figures <- drake::drake_plan(
     figure_1 = add_figure_1(data_filtered),
     figure_2 = add_figure_2(data_filtered),
     figure_3 = add_figure_3(data_filtered),
-    manuscript_figures = add_figure_all(
-      manuscript_tables,
-      figure_1,
-      figure_2,
-      figure_3
-    ),
+    manuscript_figures = add_figure_all(manuscript_tables),
     manuscript_out = print(
       manuscript_figures,
-      target = file_out("analysis/manuscript/manuscript.docx")
+      target = drake::file_out("analysis/manuscript/manuscript.docx")
+    ),
+    figure_1_out = export_tiff_figure(
+      figure_1, drake::file_out("analysis/figures/figure_1.tiff"), 180, 90
+    ),
+    figure_2_out = export_tiff_figure(
+      figure_2, drake::file_out("analysis/figures/figure_2.tiff"), 240, 160
+    ),
+    figure_3_out = export_tiff_figure(
+      figure_3, drake::file_out("analysis/figures/figure_3.tiff"), 120, 110
     )
   )
 
