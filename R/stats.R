@@ -1,3 +1,31 @@
+#' Correlation table
+#'
+#' Computes correlations between given variables. Returns correlation table as a
+#'   data frame.
+#'
+#' @param data Input data
+#' @param vars named character vector. The variable names and labels of
+#'   variables to compute correlations for
+#'
+#' @return tbl. Correlation table
+#' @export
+get_corr_table <- function(data, vars) {
+  matrix <- data %>%
+    dplyr::select(names(vars)) %>%
+    cor(use = "pairwise.complete.obs")
+
+  matrix <- round(matrix, 2)
+  matrix[upper.tri(matrix, diag = TRUE)] <- ""
+
+  matrix %>%
+    tibble::as_tibble() %>%
+    dplyr::rename_all(~vars) %>%
+    dplyr::mutate(rowname = vars) %>%
+    dplyr::select(rowname, dplyr::everything()) %>%
+    dplyr::filter(rowname != vars[1]) %>%
+    dplyr::select(-c(vars[length(vars)]))
+}
+
 #' Confidence interval for odds ratios
 #'
 #' Computes the adjusted inverse hyperbolic sine confidence interval for the

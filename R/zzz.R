@@ -12,13 +12,13 @@ pkgenv <- new.env(parent = emptyenv())
     "Hasselhorn, M., & Schulte-Körne, G."
   )
   pkgenv[["title"]] <- paste0(
-    "Comorbidities between specific learning disorders and psychopathology: ",
-    "a study with elementary school children in Germany"
+    "Comorbidities between specific learning disorders and psychopathology in ",
+    "elementary school children in Germany"
   )
   pkgenv[["product"]] <- "paper"
-  pkgenv[["year"]] <- "submitted"
-  pkgenv[["journal"]] <- ""
-  pkgenv[["doi_published"]] <- ""
+  pkgenv[["year"]] <- "2020"
+  pkgenv[["journal"]] <- "Frontiers in Psychiatry"
+  pkgenv[["doi_published"]] <- "http://doi.org/10.3389/fpsyt.2020.00292"
   pkgenv[["doi_preprint"]] <- ""
   pkgenv[["doi_osf"]] <- "http://doi.org/10.17605/OSF.IO/9MXP2"
   pkgenv[["url_osf"]] <- "https://osf.io/9mxp2/"
@@ -42,9 +42,11 @@ export_pkgenv <- function() {
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage(
     "Attaching package: '", pkgenv$pkg_name, "'\n\n",
-    "The package provides data and analysis code for our ", pkgenv$product, ":\n\n",
-    pkgenv$authors, " (", pkgenv$year, "). ", pkgenv$title, ".",
-    pkgenv$journal, " ", pkgenv$doi_published, "\n\n",
+    "The package provides data and analysis code for our ", pkgenv$product,
+    ":\n\n",
+    pkgenv$authors, " (", pkgenv$year, "). ", pkgenv$title, ". ",
+    pkgenv$journal, ". ", pkgenv$doi_published,
+    "\n\n",
     "To reproduce the analysis, run `reproduce_analysis()`",
     appendLF = TRUE
   )

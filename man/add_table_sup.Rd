@@ -7,7 +7,7 @@
 add_table_sup(data)
 }
 \arguments{
-\item{data}{tbl. The filtered data frame}
+\item{data}{tbl. The correlation table}
 }
 \value{
 \code{flextable} object. The table

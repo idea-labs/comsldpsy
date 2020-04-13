@@ -7,24 +7,20 @@ This repository contains a reproducible research compendium for our
 paper:
 
 > Visser, L., Kalmar, J., Linkersdörfer, J., Görgen, R., Rothe, J.,
-> Hasselhorn, M., & Schulte-Körne, G. (submitted). *Comorbidities
-> between specific learning disorders and psychopathology: a study with
-> elementary school children in
-Germany*.
-
-<!-- Our pre-print is online here: -->
-
-<!-- > Visser, L., Kalmar, J., Linkersdörfer, J., Görgen, R., Rothe, J., Hasselhorn, M., & Schulte-Körne, G. (submitted). *Comorbidities between specific learning disorders and psychopathology: a study with elementary school children in Germany*. , Accessed 08 Jan 2019. Online at  -->
+> Hasselhorn, M., & Schulte-Körne, G. (2020). Comorbidities between
+> specific learning disorders and psychopathology in elementary school
+> children in Germany. *Frontiers in Psychiatry*.
+> <http://doi.org/10.3389/fpsyt.2020.00292>
 
 ### How to cite
 
 Please cite this compendium as:
 
 > Visser, L., Kalmar, J., Linkersdörfer, J., Görgen, R., Rothe, J.,
-> Hasselhorn, M., & Schulte-Körne, G., (2019). *Compendium of R code and
+> Hasselhorn, M., & Schulte-Körne, G., (2020). *Compendium of R code and
 > data for ‘Comorbidities between specific learning disorders and
-> psychopathology: a study with elementary school children in Germany’*.
-> Accessed 08 Jan 2019. Online at <http://doi.org/10.17605/OSF.IO/9MXP2>
+> psychopathology in elementary school children in Germany’*. Accessed
+> 13 Apr 2020. Online at <http://doi.org/10.17605/OSF.IO/9MXP2>
 
 ### Contents
 
@@ -32,12 +28,13 @@ The compendium contains all data, code, and text associated with the
 paper. It is organized as follows:
 
   - The `R/` directory contains all the R code.
-  - The `inst/analysis_dir/analysis/` directory contains 3 subfolders
+  - The `inst/analysis_dir/analysis/` directory contains 4 subfolders
     with the following contents
       - `data/`: the raw data
+      - `figures/`: the figures used in the manuscript
+      - `manuscript/`: the manuscript as accepted by the journal
       - `templates/`: the Microsoft word template used to prepare the
         manuscript
-      - `manuscript/`: the manuscript as submitted
 
 ### How to download or install
 

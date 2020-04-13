@@ -1,26 +1,3 @@
-#' Mean and CI of intelligence score
-#'
-#' Computes the mean and confidence intervall of the IQ score for a
-#'   selected subgroup of participants.
-#'
-#' @param data tbl. Input data
-#' @param filter_cond character. Filter condition(s)
-#' @return character. Mean (CI) of IQ value for selected subgroup
-#' @export
-get_mean_ci <- function(data, filter_cond) {
-  data_selection <- data %>%
-    dplyr::filter_(filter_cond)
-
-  results <- data_selection$cft_iq_own_kl %>%
-    Hmisc::smean.cl.normal() %>%
-    round(digits = 2)
-
-  stringr::str_c(
-      "M = ", results[[1]],
-      " [95% CI = ", results[[2]], "–", results[[3]], "]"
-    )
-}
-
 #' Descriptive statistics for manuscript text
 #'
 #' Computes all descriptive statistics to be reported in the
@@ -47,22 +24,6 @@ add_text_descriptives <- function(data) {
   age_max <- max(data$age, na.rm = TRUE)
   text$age_max_y <- floor(age_max / 12)
   text$age_max_m <- round(age_max - text$age_max_y * 12)
-  age_mean_grade3 <- data %>%
-    dplyr::filter(grade == "3. Klasse") %>%
-    .$age %>%
-    mean(na.rm = TRUE)
-  text$age_mean_y_grade3 <- floor(age_mean_grade3 / 12)
-  text$age_mean_m_grade3 <- round(
-    age_mean_grade3 - text$age_mean_y_grade3 * 12
-  )
-  age_mean_grade4 <- data %>%
-    dplyr::filter(grade == "4. Klasse") %>%
-    .$age %>%
-    mean(na.rm = TRUE)
-  text$age_mean_y_grade4 <- floor(age_mean_grade4 / 12)
-  text$age_mean_m_grade4 <- round(
-    age_mean_grade4 - text$age_mean_y_grade4 * 12
-  )
 
   # participant's characteristics
   c(text$n_grade3, text$perc_grade3) %<-% get_n_perc_filter(
@@ -89,22 +50,11 @@ add_text_descriptives <- function(data) {
     data,
     "land == 'Bayern'"
   )
-  c(text$n_german, text$perc_german) %<-% get_n_perc_filter(
-    data,
-    "nationality == 'German'"
-  )
   c(text$n_nongerman, text$perc_nongerman) %<-% get_n_perc_filter(
     data,
     "nationality == 'non-German'"
   )
-  c(text$n_haupts, text$perc_haupts) %<-% get_n_perc_filter(
-    data,
-    "education_mother == 'kein/Hauptschulabschluss'"
-  )
-  c(text$n_reals, text$perc_reals) %<-% get_n_perc_filter(
-    data,
-    "education_mother == 'Mittlere Reife'"
-  )
+
   c(text$n_abitur, text$perc_abitur) %<-% get_n_perc_filter(
     data,
     "education_mother == 'Abitur'"
@@ -177,20 +127,16 @@ add_text_descriptives <- function(data) {
     "ssv_z_cat == 'indication of problems'"
     )[[2]] %>%
     round()
-
-  # intelligence group differences
-  text$iq_math <- get_mean_ci(
-    data,
-    "dsm5_cutoff_35 == 'isolated arithmetic disorder'"
-  )
-  text$iq_read <- get_mean_ci(
-    data,
-    "dsm5_cutoff_35 == 'isolated reading disorder'"
-  )
-  text$iq_spell <- get_mean_ci(
-    data,
-    "dsm5_cutoff_35 == 'isolated spelling disorder'"
-  )
+  text$perc_iso_read_adhs <- get_n_perc_filter(
+    dplyr::filter(data, dsm5_cutoff_35 == "isolated reading disorder"),
+    "adhs_z_cat == 'indication of problems'"
+    )[[2]] %>%
+    round()
+  text$perc_iso_math_adhs <- get_n_perc_filter(
+    dplyr::filter(data, dsm5_cutoff_35 == "isolated arithmetic disorder"),
+    "adhs_z_cat == 'indication of problems'"
+    )[[2]] %>%
+    round()
 
   # R version
   text$r_version <- stringr::str_c(
@@ -333,6 +279,55 @@ add_text_exclusion <- function(data) {
     data,
     dplyr::filter(df_all_filter, condition == "all conditions")$filter,
     TRUE
+  )
+
+  text
+}
+
+#' Range of correlation coefficients
+#'
+#' Outputs a character string with the range of correlation coefficients within
+#'   a specified selection of variables.
+#'
+#' @param data tbl. Correlation table
+#' @param vars character vector. Selection of variables to compute range for
+#' @return character. String reporting range of correlations, e.g., ".51–.8"
+#'
+#' @export
+report_range_corr <- function(data, vars){
+  rownames <- intersect(data$rowname, vars)
+  colnames <- intersect(names(data), vars)
+
+  range <- data %>%
+    dplyr::filter(rowname %in% rownames) %>%
+    dplyr::select(colnames) %>%
+    dplyr::mutate_all(~ as.numeric(.)) %>%
+    range(na.rm = TRUE) %>%
+    as.character() %>%
+    stringr::str_replace("0.", ".")
+
+  paste0("(", range[[1]], "–", range[[2]], ")")
+}
+
+#' Range of correlation coefficients for manuscript text
+#'
+#' Computes ranges of correlation coefficients for the tests assessing academic
+#'   performance as well as for the tests assessing psychopathological symptoms
+#'   and stores them as list of character strings, to be reported in the
+#'   manuscript.
+#'
+#' @param data tbl. Correlation table
+#' @return list. A list with named entries for the character
+#'   strings
+#' @export
+add_text_correlation <- function(data) {
+  text <- list()
+
+  text$range_corr_sld <- report_range_corr(
+    data, c("reading", "spelling", "arithmetic")
+  )
+  text$range_corr_psy <- report_range_corr(
+    data, c("ADHD", "anxiety", "conduct disorder", "depression")
   )
 
   text

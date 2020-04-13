@@ -17,7 +17,28 @@ get_plan <- function(){
   )
 
   #   __________________________________________________________________________
-  #   inferential statistics                                                ####
+  #   data analysis                                                         ####
+
+  ##  ..........................................................................
+  ##  correlations                                                          ####
+
+  plan_correlation <- drake::drake_plan(
+    df_correlation = get_corr_table(
+      data_filtered,
+      c(
+        wllp_z_own = "reading",
+        wrt_z_own = "spelling",
+        cody_z_own = "arithmetic",
+        adhs_z_own = "ADHD",
+        sca_e_z_own = "anxiety",
+        ssv_z_own = "conduct_disorder",
+        des_z_own = "depression"
+      )
+    )
+  )
+
+  ##  ..........................................................................
+  ##  Fisher's exact tests                                                  ####
 
   disability_01 <- c(
     "dsm5_cutoff_35_01",
@@ -32,9 +53,6 @@ get_plan <- function(){
     "sca_e_z_cat",
     "ssv_z_cat"
   )
-
-  ##  ..........................................................................
-  ##  Fisher's exact tests                                                  ####
 
   args_fisher <- tidyr::crossing(disability_01, psychopaths) %>%
     stats::setNames(c("x", "y")) %>%
@@ -99,13 +117,15 @@ get_plan <- function(){
   plan_add_text <- drake::drake_plan(
     text_descriptives = add_text_descriptives(data_filtered),
     text_exclusion = add_text_exclusion(data_transformed),
+    text_correlation = add_text_correlation(df_correlation),
     text_fisher = add_text_fisher(df_fisher_fdr),
     text_trend = add_text_trend(df_trend_fdr),
     text_posthoc = add_text_posthoc(df_posthoc_fdr),
     text_poisson = add_text_poisson(df_poisson),
-    text_combined = c(
+    text_manuscript = c(
       text_descriptives,
       text_exclusion,
+      text_correlation,
       text_fisher,
       text_trend,
       text_posthoc,
@@ -115,12 +135,7 @@ get_plan <- function(){
     manuscript_in = officer::read_docx(
       file_in("analysis/templates/manuscript_template.docx")
     ),
-    manuscript_text = add_text(manuscript_in, text_combined),
-
-    supplemental_in = officer::read_docx(
-      file_in("analysis/templates/supplemental_template.docx")
-    ),
-    supplemental_text = add_text(supplemental_in, text_combined)
+    manuscript_text = add_text(manuscript_in, text_manuscript),
   )
 
 
@@ -128,16 +143,21 @@ get_plan <- function(){
   #   add tables to manuscript & supplemental                               ####
 
   plan_add_tables <- drake::drake_plan(
-    table_1 = add_table_1(data_filtered),
-    table_2 = add_table_2(df_fisher_fdr),
+    table_1 = add_table_1(df_correlation),
+    table_2 = add_table_2(data_filtered),
+    table_3 = add_table_3(df_fisher_fdr),
     table_suppl = add_table_sup(data_filtered),
     manuscript_tables = add_table_manuscr(
       manuscript_text,
       table_1,
-      table_2
+      table_2,
+      table_3
+    ),
+    supplemental_in = officer::read_docx(
+      file_in("analysis/templates/supplemental_template.docx")
     ),
     supplemental_tables = add_table_suppl(
-      supplemental_text,
+      supplemental_in,
       table_suppl,
       text_descriptives
     ),
@@ -175,6 +195,7 @@ get_plan <- function(){
 
   drake::bind_plans(
     plan_preparation,
+    plan_correlation,
     plan_fisher,
     plan_fisher_combined,
     plan_trend,

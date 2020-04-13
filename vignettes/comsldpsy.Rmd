@@ -18,7 +18,7 @@ pkgenv <- comsldpsy::export_pkgenv()
 
 This research compendium comprises all the input and output files as well as the R code needed to reproduce our `r pkgenv$product`:
 
-> `r pkgenv$authors` (`r pkgenv$year`). *`r pkgenv$title`*. `r pkgenv$journal` `r pkgenv$doi_published`
+> `r pkgenv$authors` (`r pkgenv$year`). `r pkgenv$title`. *`r pkgenv$journal`*. `r pkgenv$doi_published`
 
 The compendium uses the R package `drake` to define a reproducible processing pipeline linking inputs to outputs/targets similar to `GNU make` (for more information on the `drake` package, see [here](https://ropensci.github.io/drake/)). This vignette describes how to reproduce the analysis, check the analysis pipeline, and inspect analysis steps and outputs.
 
@@ -37,11 +37,17 @@ After attaching the package, executing the function `copy_analysis()` copies the
     └── [...]
 └── analysis
     ├── data
-    │   └── data_orig.rds             # raw data
+    │   └── data_orig.rds               # raw data
+    ├── figures
+    │   └── figure_1.tiff               # figures used in the manuscript
+    │   └── figure_2.tiff               
+    │   └── figure_3.tiff
     ├── manuscript
-    │   └── manuscript.docx           # manuscript as submitted
+    │   └── manuscript.docx             # manuscript as submitted
+    │   └── supplemental.docx           # supplemental materials as submitted
     └── templates
-        └── manuscript_template.docx  # manuscript template
+        └── manuscript_template.docx    # manuscript template
+        └── supplemental_template.docx  # supplemental materials template
 ```
 
 These files represent all input files required to reproduce the analysis as well as all output files generated in the process. The function further copies a `.drake` directory to the same directory. This hidden directory stores information about the consistency of the analysis pipeline and all intermediate outputs.

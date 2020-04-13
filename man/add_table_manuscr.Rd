@@ -4,7 +4,7 @@
 \alias{add_table_manuscr}
 \title{Add tables to manuscript}
 \usage{
-add_table_manuscr(manuscript, tab1, tab2)
+add_table_manuscr(manuscript, tab1, tab2, tab3)
 }
 \arguments{
 \item{manuscript}{\code{officer} rdocx object. The manuscript}
@@ -12,6 +12,8 @@ add_table_manuscr(manuscript, tab1, tab2)
 \item{tab1}{\code{flextable} object. Table 1}
 
 \item{tab2}{\code{flextable} object. Table 2}
+
+\item{tab3}{\code{flextable} object. Table 3}
 }
 \value{
 \code{officer} rdocx object. The manuscript with added content

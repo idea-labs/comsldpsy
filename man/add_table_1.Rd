@@ -7,12 +7,13 @@
 add_table_1(data)
 }
 \arguments{
-\item{data}{tbl. The filtered data frame}
+\item{data}{tbl. The correlation table}
 }
 \value{
 \code{flextable} object. The table
 }
 \description{
-Numbers and Percentages of Children with Anxiety, Depression, Conduct
-Disorder, and ADHD in Children with Different Types of SLD
+Correlation Coefficients between the Learning Ability Scores in Reading,
+Spelling, and Arithmetic, and the Scores for Psychopathological Symptoms of
+ADHD, Anxiety, Conduct Disorder, and Depression
 }

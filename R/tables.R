@@ -13,14 +13,6 @@ get_font <- function() {
   font
 }
 
-# # font settings
-# text_normal <- officer::fp_text(
-#   font.size = 12,
-#   font.family = "Times New Roman"
-# )
-# text_superscript <- update(text_normal, vertical.align = "superscript")
-# text_italic <- update(text_normal, italic = TRUE)
-
 #' Flextable theme to mimic APA style
 #'
 #' @export
@@ -43,7 +35,27 @@ theme_apa <- function(ft) {
     flextable::autofit()
 }
 
-# helper function for add_table_1
+#' Table 1
+#'
+#' Correlation Coefficients between the Learning Ability Scores in Reading,
+#'   Spelling, and Arithmetic, and the Scores for Psychopathological Symptoms of
+#'   ADHD, Anxiety, Conduct Disorder, and Depression
+#'
+#' @param data tbl. The correlation table
+#' @return `flextable` object. The table
+#' @export
+add_table_1 <- function(data) {
+  data %>%
+    dplyr::mutate(rowname = stringr::str_replace_all(rowname, "_", " ")) %>%
+    flextable::flextable() %>%
+    flextable::set_header_labels(
+      rowname = "",
+      conduct_disorder = "conduct disorder"
+    ) %>%
+    theme_apa()
+}
+
+# helper function for add_table_2
 sld_summary_onevar <- function(data, var, group_var) {
   var <- rlang::enquo(var)
   group_var <- rlang::enquo(group_var)
@@ -78,7 +90,7 @@ sld_summary_onevar <- function(data, var, group_var) {
     dplyr::select(-rowname)
 }
 
-# helper function for add_table_1
+# helper function for add_table_2
 disorder_rows <- function(data, disorder_var, disorder_string){
   disorder_var <- rlang::enquo(disorder_var)
 
@@ -194,7 +206,7 @@ disorder_rows <- function(data, disorder_var, disorder_string){
     stats::setNames(row_names)
 }
 
-#' Table 1
+#' Table 2
 #'
 #' Numbers and Percentages of Children with Anxiety, Depression, Conduct
 #'   Disorder, and ADHD in Children with Different Types of SLD
@@ -202,7 +214,7 @@ disorder_rows <- function(data, disorder_var, disorder_string){
 #' @param data tbl. The filtered data frame
 #' @return `flextable` object. The table
 #' @export
-add_table_1 <- function(data){
+add_table_2 <- function(data){
   freq_1 <- data %>%
     dplyr::filter(!is.na(dsm5_cutoff_35)) %>%
     dplyr::group_by(dsm5_cutoff_35) %>%
@@ -318,13 +330,13 @@ add_table_1 <- function(data){
     flextable::width(j = c(5, 7, 9), width = 0.9)
 }
 
-#' Table 2
+#' Table 3
 #'
 #' Fisher’s exact test results.
 #'
-#' @inherit add_table_1
+#' @inherit add_table_2
 #' @export
-add_table_2 <- function(data){
+add_table_3 <- function(data){
   data %>%
     dplyr::select(
       x, y, fisher_test_p, fisher_test_p_fdr,
@@ -372,12 +384,12 @@ add_table_2 <- function(data){
     ) %>%
     dplyr::select(-cil, -ciu) %>%
     flextable::flextable(col_keys = c("dis", "psy", "dummy_col", "or")) %>%
-    flextable::display(
-      col_key = "dummy_col",
-      pattern = "{{variable_}}{{superscript_}}",
-      formatters = list(variable_ ~ p, superscript_ ~ fdr),
-      fprops = list(superscript_ = update(get_font()$superscript, italic = TRUE))
-    ) %>%
+    # flextable::display(
+    #   col_key = "dummy_col",
+    #   pattern = "{{variable_}}{{superscript_}}",
+    #   formatters = list(variable_ ~ p, superscript_ ~ fdr),
+    #   fprops = list(superscript_ = update(get_font()$superscript, italic = TRUE))
+    # ) %>%
     flextable::set_header_labels(
       dis = "SLD",
       psy = "psychopathology",
@@ -533,21 +545,26 @@ body_add_caption_table <- function(manuscript, number, text) {
 #' @param manuscript `officer` rdocx object. The manuscript
 #' @param tab1 `flextable` object. Table 1
 #' @param tab2 `flextable` object. Table 2
+#' @param tab3 `flextable` object. Table 3
 #' @return `officer` rdocx object. The manuscript with added content
 #' @export
-add_table_manuscr <- function(manuscript, tab1, tab2){
+add_table_manuscr <- function(manuscript, tab1, tab2, tab3){
   manuscript %>%
 
     # table 1
     officer::body_add_break() %>%
-    officer::body_end_section_portrait() %>%
-    body_add_caption_table(1, "Numbers and Percentages of Children with Anxiety, Depression, Conduct Disorder, and ADHD in Children with Different Types of SLD") %>%
+    body_add_caption_table(1, "Correlation Coefficients between the Learning Ability Scores in Reading, Spelling, and Arithmetic, and the Scores for Psychopathological Symptoms of ADHD, Anxiety, Conduct Disorder, and Depression") %>%
     flextable::body_add_flextable(tab1, align = "left") %>%
-    officer::body_end_section_landscape() %>%
 
     # table 2
-    body_add_caption_table(2, "Fisher’s Exact Test Results for the Difference in Occurrence of Anxiety, Depression, Conduct Disorder, and ADHD between Children with and without SLD") %>%
+    officer::body_end_section_portrait() %>%
+    body_add_caption_table(2, "Numbers and Percentages of Children with Anxiety, Depression, Conduct Disorder, and ADHD in Children with Different Types of SLD") %>%
     flextable::body_add_flextable(tab2, align = "left") %>%
+    officer::body_end_section_landscape() %>%
+
+    # table 3
+    body_add_caption_table(3, "Fisher’s Exact Test Results for the Difference in Occurrence of Anxiety, Depression, Conduct Disorder, and ADHD between Children with and without SLD") %>%
+    flextable::body_add_flextable(tab3, align = "left") %>%
     body_add_footnote("* ", "significant after FDR correction", "superscript")
 }
 

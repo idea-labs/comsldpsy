@@ -20,11 +20,7 @@ pkgenv <- export_pkgenv()
 
 This repository contains a reproducible research compendium for our `r pkgenv$product`:
 
-> `r pkgenv$authors` (`r pkgenv$year`). *`r pkgenv$title`*. `r pkgenv$journal` `r pkgenv$doi_published`
-
-<!-- Our pre-print is online here: -->
-
-<!-- > `r pkgenv$authors` (`r pkgenv$year`). *`r pkgenv$title`*. `r pkgenv$journal`, Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at `r pkgenv$doi_preprint` -->
+> `r pkgenv$authors` (`r pkgenv$year`). `r pkgenv$title`. *`r pkgenv$journal`*. `r pkgenv$doi_published`
 
 ### How to cite
 
@@ -37,10 +33,11 @@ Please cite this compendium as:
 The compendium contains all data, code, and text associated with the `r pkgenv$product`. It is organized as follows:
 
 - The `R/` directory contains all the R code.
-- The `inst/analysis_dir/analysis/` directory contains 3 subfolders with the following contents
+- The `inst/analysis_dir/analysis/` directory contains 4 subfolders with the following contents
   - `data/`: the raw data
+  - `figures/`: the figures used in the manuscript
+  - `manuscript/`: the manuscript as accepted by the journal
   - `templates/`: the Microsoft word template used to prepare the manuscript
-  - `manuscript/`: the manuscript as submitted
 
 ### How to download or install
 

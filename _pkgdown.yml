@@ -17,9 +17,10 @@ reference:
   - create_psy_vars
   - create_sld_vars
   - filter_data
-- title: "Inferential statistics"
-  desc: "Functions for doing inferential statistical analysis"
+- title: "Statistics"
+  desc: "Functions for doing the statistical analysis"
   contents:
+  - get_corr_table
   - fisher_test
   - adj_inv_sinh_ci_or
   - trend_test
@@ -32,6 +33,7 @@ reference:
   contents:
   - add_table_1
   - add_table_2
+  - add_table_3
   - add_table_sup
   - add_table_manuscr
   - add_table_suppl
@@ -54,10 +56,11 @@ reference:
   contents:
   - add_text
   - add_text_descriptives
-  - get_mean_ci
   - add_text_exclusion
+  - add_text_correlation
   - count_filter
   - count_filter_results
+  - report_range_corr
   - add_text_fisher
   - report_fisher_or
   - report_fisher_or_range

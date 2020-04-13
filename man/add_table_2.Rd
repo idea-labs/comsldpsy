@@ -13,5 +13,6 @@ add_table_2(data)
 \code{flextable} object. The table
 }
 \description{
-Fisher’s exact test results.
+Numbers and Percentages of Children with Anxiety, Depression, Conduct
+Disorder, and ADHD in Children with Different Types of SLD
 }
